@@ -319,6 +319,6 @@ Visible <!-- invisible -->
 
 ## Pitfalls
 
-1. …
-2. …
-3. …
+1. **Problem:** I created the file `LICENSE`, but never added any text, so it was empty. I only noticed when I tested the relative link in my cheat sheet. **Fix:** Pasted the MIT licence text into `LICENSE`; GitHub now shows "MIT license".
+2. 
+3. 
