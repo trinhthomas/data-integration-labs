@@ -2,7 +2,7 @@
 
 My lab work for the Data Integration course at TH Köln.
 
-By [Thomas Trinh](https://github.com/trinhthomas) · [Course repository](https://github.com/breuert/data-integration) · Team project: …
+By [Thomas Trinh](https://github.com/trinhthomas) · [Course repository](https://github.com/breuert/data-integration) · Team project: coming soon
 
 ## Labs
 
