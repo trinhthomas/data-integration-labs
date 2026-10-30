@@ -1,0 +1,33 @@
+# Lab 1 · Task 4 · Inside CPython
+
+Repository: [python/cpython](https://github.com/python/cpython)
+
+## 1. Licence
+- Licence: …
+- Permissive or copyleft: …
+- If I copy code, I must: …
+
+## 2. What machines see
+| Repository | spdx_id | Explanation |
+| --- | --- | --- |
+| python/cpython | … | … |
+| trinhthomas/data-integration-labs | … | … |
+| owid/co2-data | … | … |
+
+## 3. Community files
+README: … · LICENSE: … · CONTRIBUTING: … · CODE_OF_CONDUCT: …
+
+## 4. People
+- Contributors: …
+- Who decides: …
+
+## 5. Money
+…
+
+## 6. Activity
+- Latest release: …
+- Open issues: … · Open PRs: … (as of 30.10.26)
+
+## 7. My way in
+- How a change gets in: …
+- Newcomer issues: …
