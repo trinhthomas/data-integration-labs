@@ -42,8 +42,8 @@ Sources: [Sponsor button on the repository](https://github.com/python/cpython) �
 - **Volunteers:** The LICENSE file thanks the many outside volunteers who have worked on Python.
 
 ## 6. Activity
-- **Latest release:** Python 3.15.2, released on 25 October 2026 (the major version 3.15 came out on 9 October 2026). CPython publishes its releases on python.org; on GitHub it only has tags (685).
-- Open issues: … · Open PRs: … (as of 30.10.26)
+- Sources: [Python downloads](https://www.python.org/downloads/) · [Issues](https://github.com/python/cpython/issues) · [Pull requests](https://github.com/python/cpython/pulls)
+- **Open issues:** 6,864 · **Open pull requests:** 2,336 (as of 09.11.26)
 
 ## 7. My way in
 - How a change gets in: …
