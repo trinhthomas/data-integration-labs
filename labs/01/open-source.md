@@ -46,5 +46,5 @@ Sources: [Sponsor button on the repository](https://github.com/python/cpython) �
 - **Open issues:** 6,864 · **Open pull requests:** 2,336 (as of 09.11.26)
 
 ## 7. My way in
-- How a change gets in: …
-- Newcomer issues: …
+- **How a change gets in:** First read the devguide. Then open a pull request; CPython's workflow differs slightly from the usual GitHub flow and is described in "Lifecycle of a Pull Request". Bots and status checks comment on every pull request, and you have to follow their instructions. Discussions that are not about the code itself belong in the related GitHub issue. Because the project is run by volunteers, there is no guarantee when a core developer will review it; after a month without a response, you can ask for a review in the Core Development category on Discourse. All interactions follow the PSF Code of Conduct.
+- **Newcomer issues:** 65 open issues have the label *easy* (as of 10.11.26). Many of them are about the documentation (label *docs*), so a first contribution does not have to be code.
