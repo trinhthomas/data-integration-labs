@@ -88,3 +88,77 @@ Attribution line (TASL):
 ### 6. People
 
 The data contains no personal data: it describes trains,
+
+## Task 7 · Review it with the FAIR principles
+
+| Principle | Rating | Evidence |
+| --- | --- | --- |
+| F1 | ~ | A stable URL, [huggingface.co/datasets/piebro/deutsche-bahn-data](https://huggingface.co/datasets/piebro/deutsche-bahn-data), but no DOI (`"doi": null` in the [Hugging Face API](https://huggingface.co/api/datasets/piebro/deutsche-bahn-data)) |
+| F2 | ~ | Title, description, tags and licence are in the [README](https://huggingface.co/datasets/piebro/deutsche-bahn-data/blob/main/README.md), but the period covered and the change in station coverage (November 2025) are only explained on [GitHub](https://github.com/piebro/deutsche-bahn-data) |
+| F4 | ~ | Indexed in the Hugging Face dataset search, where I found it; not listed on GovData or Open.NRW |
+| A1 | ✓ | Download over HTTPS without a login; I downloaded `data-2026-10.parquet` directly |
+| I1 | ✓ | Parquet, an open, machine-readable format |
+| I2, I3 | ~ | Stations use Deutsche Bahn's EVA numbers, and times are stored as timestamps, but without a time zone; the README links to the collection code on GitHub and names Deutsche Bahn's API as the source, but not the exact API |
+| R1 | ~ | A schema table in the README describes 18 columns, but five columns of the files are missing; the collection method can only be read from the code |
+| R1.1 | ✓ | CC BY 4.0, also machine-readable as `license: cc-by-4.0` in the dataset metadata and in the [Hugging Face API](https://huggingface.co/api/datasets/piebro/deutsche-bahn-data) |
+| R1.2 | ✓ | It is a copy: collected by piebro from Deutsche Bahn's public timetable API; the raw API responses are published as well (`raw_data/`) |
+| R1.3 | ~ | No DCAT-AP, but Hugging Face generates metadata in [Croissant](https://huggingface.co/api/datasets/piebro/deutsche-bahn-data/croissant), a standard for machine learning datasets |
+
+**Verdict:** The dataset is open, because CC BY 4.0 conforms to the Open Definition, but only partly FAIR: it is easy to access and reuse (A1, I1, R1.1, R1.2), but hard to find in public data portals and not fully documented (F1, F4, R1).
+
+**Three things I will do better when we publish our own dataset for milestone 2:**
+
+1. Document every column in a data dictionary, including units and the time zone.
+2. State the period and the area covered, and any change in coverage, directly in the metadata.
+3. Get a persistent identifier, for example a DOI from Zenodo.
+
+## Task 8 · Plan what to combine it with
+
+### 1. Second source
+
+[Hourly precipitation, DWD station 02667 Köln/Bonn](https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/) by the Deutscher Wetterdienst (DWD), CSV-like text files, CC BY 4.0. It is the only active DWD station in Cologne with hourly data; the station Köln-Stammheim stopped in September 2024. The DWD also publishes hourly air temperature for the same station.
+
+### 2. Shared key
+
+The two sources share the time (hour) and, roughly, the place (Cologne).
+
+| Source | The time as published | After cleaning (hour in UTC) |
+| --- | --- | --- |
+| Deutsche Bahn Data | `time` = `2026-10-24 06:21:00` (Köln Hbf, NJ 469), no time zone | `2026-10-24 04:00` |
+| Deutsche Bahn Data | `time` = `2026-10-02 00:00:00` (Köln-Ehrenfeld, RE 10936), no time zone | `2026-10-01 22:00` |
+| DWD, station 02667 | `MESS_DATUM` = `2026102404` (1.3 mm), in UTC | `2026-10-24 04:00` |
+| DWD, station 02667 | `MESS_DATUM` = `2026100122` (2.0 mm), in UTC | `2026-10-01 22:00` |
+
+They do not match as published: the train times have no time zone and are presumably German local time, while the DWD gives UTC. Before joining, I must convert the train times from local time to UTC (minus 2 hours in summer time, minus 1 hour in winter time, which changed on 25 October 2026), round them down to the hour and convert `MESS_DATUM` into a timestamp. The example of Köln-Ehrenfeld shows that the date can change, too.
+
+The place does not match exactly either: the weather station is at Cologne/Bonn Airport, about 15 km from Köln Hbf, so I treat its weather as the weather for all of Cologne.
+
+### 3. Granularity
+
+The train data has one row per stop, to the minute; the weather data has one value per hour for one station. I will either add the weather of the matching hour to each stop, or aggregate the stops per hour (mean delay, share of trains delayed by 6 minutes or more, cancellations) and join them with the weather of that hour.
+
+### 4. Questions
+
+1. Are trains in Cologne more delayed or cancelled in hours with heavy rain than in dry hours?
+2. Are S-Bahn trains in Cologne more sensitive to rain than long-distance trains (ICE, IC)?
+3. Does the delay rise only in the rainy hour itself, or also in the hours after it?
+
+### 5. Licences
+
+Both sources are under CC BY 4.0, so I may combine them and publish the result under CC BY 4.0. I must credit Deutsche Bahn and piebro for the train data and the Deutscher Wetterdienst for the weather data, link the licence, and say that I filtered, converted and joined the data.
+
+### 6. Next steps
+
+```mermaid
+flowchart TD
+    A[Download monthly Parquet files<br>Deutsche Bahn Data] --> B[Filter to stations in Cologne]
+    B --> C[Convert local time to UTC<br>and round down to the hour]
+    D[Download hourly precipitation<br>DWD station 02667] --> E[Convert MESS_DATUM to a timestamp<br>and mark missing values]
+    C --> F[Join on the hour]
+    E --> F
+    F --> G[Joined table: stops with<br>the rain of their hour]
+```
+
+### 7. Verdict
+
+Yes, I would build our project on this dataset: it is open, large, updated every month and covers all stations in Cologne since November 2025. The biggest risk is that it is a private copy of Deutsche Bahn's API: if piebro stops collecting, there will be no new data, and errors such as the negative delays are hard to check against an official source. A second risk is the time zone, which we must convert correctly before every join.
